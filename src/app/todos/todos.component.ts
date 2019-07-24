@@ -1,13 +1,37 @@
+import { bounceOutAnimation, fadeInAnimation } from './../animation';
 import { Component } from '@angular/core';
 import {  slide } from '../animation';
+import { trigger, transition, animate, style, state, keyframes, animation, useAnimation, query, animateChild, group, stagger } from '@angular/animations';
 
 @Component({
   selector: 'app-todos',
   templateUrl: './todos.component.html',
   styleUrls: ['./todos.component.css'],
   animations:[
-    // fade,
-    slide
+    trigger('todosAnimation',[
+      transition('void=>*',[
+        group([
+            query('h1',[
+              style({ transform: 'translateY(-15px) translateX(15px)' }),
+              animate(800)
+            ]),
+            query('@todoAnimation', [
+              stagger(250, animateChild())
+          ])
+        ])
+      ])
+    ]),
+
+    trigger('todoAnimation',[
+        transition('void=>*', [
+          useAnimation(fadeInAnimation, { params:{duration: '900ms'} })
+        ]),
+        transition('*=>void', [
+          style({backgroundColor: 'red'}),
+          animate(1000),
+          useAnimation(bounceOutAnimation)
+        ])
+    ])
   ]
 })
 
